@@ -96,3 +96,16 @@ amplify push
 ```
 
 This will trigger a deployment using CloudFormation.
+
+### Add Amplify to UI
+
+- Use `Amplify` and the config from `./aws-exports` to configure the app to use Amplify
+- Use the `withAuthenticator` and `AmplifySignOut` components from `@aws-amplify/ui-react` to add Auth
+
+This will wrap the entire `<App />` in a generated auth component with built in Auth flow
+
+- Sign up form
+- Sign in form
+- Reset password
+- Email 2FA on signup
+- MFA confirmation form
