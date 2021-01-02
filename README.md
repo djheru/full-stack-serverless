@@ -109,3 +109,13 @@ This will wrap the entire `<App />` in a generated auth component with built in 
 - Reset password
 - Email 2FA on signup
 - MFA confirmation form
+
+### Cleaning Up AWS Resources
+
+#### Delete a Feature
+
+- `amplify remove auth`
+
+#### Delete the Stack and Local Generated Files
+
+- `amplify delete`
