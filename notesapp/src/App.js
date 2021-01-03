@@ -7,6 +7,7 @@ import { listNotes as listNotesQuery } from "./graphql/queries";
 import {
   createNote as createNoteMutation,
   deleteNote as deleteNoteMutation,
+  updateNote as updateNoteMutation,
 } from "./graphql/mutations";
 
 const CLIENT_ID = uuid();
@@ -97,13 +98,32 @@ function App() {
     }
   }
 
-  function onChange(e) {
-    dispatch({ type: "SET_INPUT", name: e.target.name, value: e.target.value });
+  async function updateNote(note) {
+    const index = state.notes.findIndex((n) => n.id === note.id);
+    const notes = [...state.notes];
+    const completed = !note.completed;
+    notes[index].completed = completed;
+    dispatch({ type: "SET_NOTES", notes });
+    try {
+      const { id } = note;
+      const response = await API.graphql({
+        query: updateNoteMutation,
+        variables: { input: { id, completed } },
+      });
+      console.log(response);
+      console.log(`Successfully updated note ${note.id}!`);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   useEffect(() => {
     fetchNotes();
   }, []);
+
+  function onChange(e) {
+    dispatch({ type: "SET_INPUT", name: e.target.name, value: e.target.value });
+  }
 
   function renderItem(item) {
     return (
@@ -111,6 +131,9 @@ function App() {
         actions={[
           <p style={styles.p} onClick={() => deleteNote(item)}>
             Delete
+          </p>,
+          <p style={styles.p} onClick={() => updateNote(item)}>
+            Mark {item.completed ? "Incomplete" : "Complete"}
           </p>,
         ]}
         style={styles.item}
