@@ -132,7 +132,7 @@ amplify init
 
 Here, you'll have to answer the same prompts as before. Choose the defaults.
 
-## Create a Serverless Function
+## Create a Serverless REST API
 
 ### Generate the Function Boilerplate
 
@@ -178,3 +178,23 @@ Check out sample function code generated in <project-dir>/amplify/backend/functi
 #### Create a `/coins` Route
 
 - Update app.js to add a `/coins` route that returns a static object
+
+### Add the REST API
+
+- `amplify add api`
+
+Take note of the prompts
+
+```
+? Please select from one of the below mentioned services: REST
+? Provide a friendly name for your resource to be used as a label for this category in the project: cryptoapi
+? Provide a path (e.g., /book/{isbn}): /coins
+? Choose a Lambda source Use a Lambda function already added in the current Amplify project
+? Choose the Lambda function to invoke by this path cryptofunction
+? Restrict API access No
+? Do you want to add another path? No
+```
+
+### Deploy the API
+
+- `amplify push`
