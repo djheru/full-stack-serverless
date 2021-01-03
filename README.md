@@ -295,3 +295,52 @@ Console output contains the API endpoint and an API key
 GraphQL endpoint: https://kcihs4bhljenjc4pqvlxinxnfu.appsync-api.us-west-2.amazonaws.com/graphql
 GraphQL API KEY: da2-xflcfgcqyzbgzdcwuhy5d3474q
 ```
+
+### Interacting with the API
+
+- `amplify console api`
+- Choose "GraphQL"
+
+Example Graphql Queryies:
+
+```graphql
+mutation createNote($createNoteInput: CreateNoteInput!) {
+  createNote(input: $createNoteInput) {
+    id
+    name
+    description
+    completed
+  }
+}
+query listNotes {
+  listNotes {
+    items {
+      id
+      name
+      description
+      completed
+    }
+  }
+}
+query getNote($getNoteInput: ID!) {
+  getNote(id: $getNoteInput) {
+    id
+    name
+    description
+    completed
+  }
+}
+```
+
+Input Variables:
+
+```json
+{
+  "getNoteInput": "2c9729ad-10d5-4f37-bd1c-84c751d22c7b",
+  "createNoteInput": {
+    "name": "book flight",
+    "description": "fly in big plane",
+    "completed": false
+  }
+}
+```
