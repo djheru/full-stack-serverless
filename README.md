@@ -119,3 +119,15 @@ This will wrap the entire `<App />` in a generated auth component with built in 
 #### Delete the Stack and Local Generated Files
 
 - `amplify delete`
+
+# CryptoApp API
+
+## App Setup
+
+```bash
+npx create-react-app cryptoapp && cd cryptoapp
+npm i aws-amplify
+amplify init
+```
+
+Here, you'll have to answer the same prompts as before. Choose the defaults.
