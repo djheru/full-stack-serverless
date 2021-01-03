@@ -262,3 +262,36 @@ GraphQL schema compiled successfully.
 Edit your schema at /Users/philipdamra/Workspace/_sandbox/appsync-amplify/full-stack-serverless/notesapp/amplify/backend/api/notesapi/schema.graphql or place .graphql files in a directory at /Users/philipdamra/Workspace/_sandbox/appsync-amplify/full-stack-serverless/notesapp/amplify/backend/api/notesapi/schema
 ? Do you want to edit the schema now? Yes
 ```
+
+### Update GraphQL Schema
+
+```graphql
+type Note @model {
+  id: ID!
+  clientId: ID
+  name: String!
+  description: String
+  completed: Boolean
+}
+```
+
+### Deploy the API
+
+- `amplify push`
+
+Answer the prompts
+
+```
+? Do you want to generate code for your newly created GraphQL API? Yes
+? Choose the code generation language target: javascript
+? Enter the file name pattern of graphql queries, mutations and subscriptions: src/graphql/**/*.js
+? Do you want to generate/update all possible GraphQL operations - queries, mutations and subscriptions? Yes
+? Enter maximum statement depth [increase from default if your schema is deeply nested]: 2
+```
+
+Console output contains the API endpoint and an API key
+
+```
+GraphQL endpoint: https://kcihs4bhljenjc4pqvlxinxnfu.appsync-api.us-west-2.amazonaws.com/graphql
+GraphQL API KEY: da2-xflcfgcqyzbgzdcwuhy5d3474q
+```
