@@ -223,3 +223,15 @@ cd ../../../../..
 - `amplify push`
 
 ### Update the React Client
+
+# Notes App
+
+## Initial Setup
+
+```bash
+npx create-react-app notesapp && cd notesapp
+npm i aws-amplify antd uuid
+amplify init
+```
+
+Answer the prompts, this will be a React app, obvs
