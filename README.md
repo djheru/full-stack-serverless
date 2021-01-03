@@ -350,3 +350,5 @@ Input Variables:
 #### Listing Notes
 
 #### Creating Notes
+
+#### Deleting Notes

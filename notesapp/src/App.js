@@ -4,7 +4,10 @@ import { List, Input, Button } from "antd";
 import { v4 as uuid } from "uuid";
 import "antd/dist/antd.css";
 import { listNotes as listNotesQuery } from "./graphql/queries";
-import { createNote as createNoteMutation } from "./graphql/mutations";
+import {
+  createNote as createNoteMutation,
+  deleteNote as deleteNoteMutation,
+} from "./graphql/mutations";
 
 const CLIENT_ID = uuid();
 
@@ -79,6 +82,21 @@ function App() {
     }
   }
 
+  async function deleteNote({ id }) {
+    const notes = state.notes.filter((note) => note.id !== id);
+    dispatch({ type: "SET_NOTES", notes });
+    try {
+      const response = await API.graphql({
+        query: deleteNoteMutation,
+        variables: { input: { id } },
+      });
+      console.log(response);
+      console.log(`Successfully deleted note ${id}!`);
+    } catch (e) {
+      console.log(e.message || e.stack);
+    }
+  }
+
   function onChange(e) {
     dispatch({ type: "SET_INPUT", name: e.target.name, value: e.target.value });
   }
@@ -88,9 +106,15 @@ function App() {
   }, []);
 
   function renderItem(item) {
-    console.log({ item });
     return (
-      <List.Item style={styles.item}>
+      <List.Item
+        actions={[
+          <p style={styles.p} onClick={() => deleteNote(item)}>
+            Delete
+          </p>,
+        ]}
+        style={styles.item}
+      >
         <List.Item.Meta title={item.name} description={item.description} />
       </List.Item>
     );
