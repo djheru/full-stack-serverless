@@ -131,3 +131,43 @@ amplify init
 ```
 
 Here, you'll have to answer the same prompts as before. Choose the defaults.
+
+## Create a Serverless Function
+
+### Generate the Function Boilerplate
+
+- `amplify add function`
+
+Answer the prompts as follows:
+
+```
+? Select which capability you want to add: Lambda function (serverless function)
+? Provide an AWS Lambda function name: cryptofunction
+? Choose the runtime that you want to use: NodeJS
+? Choose the function template that you want to use: Serverless ExpressJS function (Integration with API Gateway)
+
+Available advanced settings:
+- Resource access permissions
+- Scheduled recurring invocation
+- Lambda layers configuration
+
+? Do you want to configure advanced settings? No
+? Do you want to edit the local lambda function now? No
+```
+
+Take note of the output
+
+```
+Successfully added resource cryptofunction locally.
+
+Next steps:
+Check out sample function code generated in <project-dir>/amplify/backend/function/cryptofunction/src
+"amplify function build" builds all of your functions currently in the project
+"amplify mock function <functionName>" runs your function locally
+"amplify push" builds all of your local backend resources and provisions them in the cloud
+"amplify publish" builds all of your local backend and front-end resources (if you added hosting category) and provisions them in the cloud
+```
+
+### Edit the Function
+
+- Note the generated files at `./cryptoapp/amplify/backend/function/cryptofunction`
