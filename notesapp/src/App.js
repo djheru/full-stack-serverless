@@ -9,6 +9,11 @@ import {
   deleteNote as deleteNoteMutation,
   updateNote as updateNoteMutation,
 } from "./graphql/mutations";
+import {
+  onCreateNote,
+  onDeleteNote,
+  onUpdateNote,
+} from "./graphql/subscriptions";
 
 const CLIENT_ID = uuid();
 
@@ -27,11 +32,24 @@ const initialState = {
 };
 
 function reducer(state, action) {
+  const getIndex = (note) => state.notes.findIndex((n) => n.id === note.id);
   switch (action.type) {
     case "SET_NOTES":
       return { ...state, notes: action.notes, loading: false };
     case "ADD_NOTE":
       return { ...state, notes: [action.note, ...state.notes], loading: false };
+    case "UPDATE_NOTE":
+      console.log({ action });
+      const updateIndex = getIndex(action.note);
+      state.notes[updateIndex] = { ...action.note };
+      return { ...state, loading: false };
+    case "REMOVE_NOTE":
+      const removeIndex = getIndex(action.note);
+      const notes = [
+        ...state.notes.slice(0, removeIndex),
+        ...state.notes.slice(removeIndex + 1),
+      ];
+      return { ...state, notes, loading: false };
     case "RESET_FORM":
       return { ...state, form: initialState.form };
     case "SET_INPUT":
@@ -83,10 +101,10 @@ function App() {
     }
   }
 
-  async function deleteNote({ id }) {
-    const notes = state.notes.filter((note) => note.id !== id);
-    dispatch({ type: "SET_NOTES", notes });
+  async function deleteNote(note) {
+    dispatch({ type: "REMOVE_NOTE", note });
     try {
+      const { id } = note;
       const response = await API.graphql({
         query: deleteNoteMutation,
         variables: { input: { id } },
@@ -99,13 +117,10 @@ function App() {
   }
 
   async function updateNote(note) {
-    const index = state.notes.findIndex((n) => n.id === note.id);
-    const notes = [...state.notes];
-    const completed = !note.completed;
-    notes[index].completed = completed;
-    dispatch({ type: "SET_NOTES", notes });
+    note.completed = !note.completed;
+    dispatch({ type: "UPDATE_NOTE", note });
     try {
-      const { id } = note;
+      const { id, completed } = note;
       const response = await API.graphql({
         query: updateNoteMutation,
         variables: { input: { id, completed } },
@@ -119,6 +134,42 @@ function App() {
 
   useEffect(() => {
     fetchNotes();
+    const createNoteSubscription = API.graphql({
+      query: onCreateNote,
+    }).subscribe({
+      next: (noteData) => {
+        const note = noteData.value.data.onCreateNote;
+        if (CLIENT_ID !== note.clientId) {
+          dispatch({ type: "ADD_NOTE", note });
+        }
+      },
+    });
+    const updateNoteSubscription = API.graphql({
+      query: onUpdateNote,
+    }).subscribe({
+      next: (noteData) => {
+        const note = noteData.value.data.onUpdateNote;
+        if (CLIENT_ID !== note.clientId) {
+          dispatch({ type: "UPDATE_NOTE", note });
+        }
+      },
+    });
+    const deleteNoteSubscription = API.graphql({
+      query: onDeleteNote,
+    }).subscribe({
+      next: (noteData) => {
+        console.log({ noteData });
+        const note = noteData.value.data.onDeleteNote;
+        if (CLIENT_ID !== note.clientId) {
+          dispatch({ type: "REMOVE_NOTE", note });
+        }
+      },
+    });
+    return () => {
+      createNoteSubscription.unsubscribe();
+      updateNoteSubscription.unsubscribe();
+      deleteNoteSubscription.unsubscribe();
+    };
   }, []);
 
   function onChange(e) {
