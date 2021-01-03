@@ -221,3 +221,5 @@ cd ../../../../..
 ### Deploy
 
 - `amplify push`
+
+### Update the React Client

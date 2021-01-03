@@ -4,9 +4,19 @@ import "./App.css";
 
 function App() {
   const [coins, updateCoins] = useState([]);
+  const [input, updateInput] = useState({ limit: 5, start: 0 });
+
   async function fetchCoins() {
-    const data = await API.get("cryptoapi", "/coins");
+    const { limit, start } = input;
+    const data = await API.get(
+      "cryptoapi",
+      `/coins?start=${start}&limit=${limit}`
+    );
     updateCoins(data.coins);
+  }
+
+  function updateInputValues(type, value) {
+    updateInput({ ...input, [type]: value });
   }
 
   useEffect(() => {
@@ -15,6 +25,15 @@ function App() {
 
   return (
     <div className="App">
+      <input
+        onChange={(e) => updateInputValues("start", e.target.value)}
+        placeholder="start"
+      />
+      <input
+        onChange={(e) => updateInputValues("limit", e.target.value)}
+        placeholder="limit"
+      />
+      <button onClick={fetchCoins}>Fetch Coins</button>
       {coins.map((coin, index) => (
         <div key={index}>
           <h4>
