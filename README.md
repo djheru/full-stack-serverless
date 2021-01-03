@@ -205,3 +205,19 @@ Take note of the prompts
 - Create state data, and use `Amplify.API` to `get` the coin data
 - Update the state and call the function in `useEffect`
 - Iterate over the coin data and display
+
+## Update the Function to Obtain Live Data
+
+### Install Axios in the Function
+
+```bash
+cd amplify/backend/function/cryptofunction/src
+npm i axios
+cd ../../../../..
+```
+
+### Update the Route Handler for `/coins`
+
+### Deploy
+
+- `amplify push`

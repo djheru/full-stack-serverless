@@ -1,14 +1,7 @@
-/*
-Copyright 2017 - 2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with the License. A copy of the License is located at
-    http://aws.amazon.com/apache2.0/
-or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and limitations under the License.
-*/
-
 var express = require("express");
 var bodyParser = require("body-parser");
 var awsServerlessExpressMiddleware = require("aws-serverless-express/middleware");
+const axios = require("axios");
 
 // declare a new express app
 var app = express();
@@ -23,12 +16,15 @@ app.use(function (req, res, next) {
 });
 
 app.get("/coins", function (req, res) {
-  const coins = [
-    { name: "Bitcoin", symbol: "BTC", price_usd: "30000" },
-    { name: "Ethereum", symbol: "ETH", price_usd: "750" },
-    { name: "Litecoin", symbol: "LTC", price_usd: "125" },
-  ];
-  res.json({ coins });
+  const { apiGateway: { event: { queryStringParameters: params } } = {} } = req;
+  const start = params && params.start ? params.start : 0;
+  const limit = params && params.limit ? params.limit : 10;
+  const apiUrl = "https://api.coinlore.com/api/tickers";
+  const queryString = `start=${start}&limit=${limit}`;
+  axios
+    .get(`${apiUrl}?${queryString}`)
+    .then((response) => res.json({ coins: response.data.data }))
+    .catch((error) => res.json({ error }));
 });
 
 app.listen(3000, function () {
