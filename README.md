@@ -235,3 +235,30 @@ amplify init
 ```
 
 Answer the prompts, this will be a React app, obvs
+
+## Add GraphQL API
+
+- `amplify add api`
+
+Follow the prompts to set up a GraphQL API
+
+```
+? Please select from one of the below mentioned services: GraphQL
+? Provide API name: notesapi
+? Choose the default authorization type for the API API key
+? Enter a description for the API key: APIKey
+? After how many days from now the API key should expire (1-365): 7
+? Do you want to configure advanced settings for the GraphQL API No, I am done.
+? Do you have an annotated GraphQL schema? No
+? Choose a schema template: Single object with fields (e.g., “Todo” with ID, name, description)
+
+The following types do not have '@auth' enabled. Consider using @auth with @model
+         - Todo
+Learn more about @auth here: https://docs.amplify.aws/cli/graphql-transformer/directives#auth
+
+
+GraphQL schema compiled successfully.
+
+Edit your schema at /Users/philipdamra/Workspace/_sandbox/appsync-amplify/full-stack-serverless/notesapp/amplify/backend/api/notesapi/schema.graphql or place .graphql files in a directory at /Users/philipdamra/Workspace/_sandbox/appsync-amplify/full-stack-serverless/notesapp/amplify/backend/api/notesapi/schema
+? Do you want to edit the schema now? Yes
+```
