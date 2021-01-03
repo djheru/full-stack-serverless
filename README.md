@@ -171,3 +171,10 @@ Check out sample function code generated in <project-dir>/amplify/backend/functi
 ### Edit the Function
 
 - Note the generated files at `./cryptoapp/amplify/backend/function/cryptofunction`
+- The function is an express app
+- The routes are configured in src/app.js
+- The API gateway event is proxied to the express server
+
+#### Create a `/coins` Route
+
+- Update app.js to add a `/coins` route that returns a static object
