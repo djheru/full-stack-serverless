@@ -348,3 +348,5 @@ Input Variables:
 ### Building the React UI
 
 #### Listing Notes
+
+#### Creating Notes

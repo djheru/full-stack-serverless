@@ -1,8 +1,12 @@
 import React, { useEffect, useReducer } from "react";
 import { API } from "aws-amplify";
-import { List } from "antd";
+import { List, Input, Button } from "antd";
+import { v4 as uuid } from "uuid";
 import "antd/dist/antd.css";
-import { listNotes } from "./graphql/queries";
+import { listNotes as listNotesQuery } from "./graphql/queries";
+import { createNote as createNoteMutation } from "./graphql/mutations";
+
+const CLIENT_ID = uuid();
 
 const styles = {
   container: { padding: 20 },
@@ -22,6 +26,12 @@ function reducer(state, action) {
   switch (action.type) {
     case "SET_NOTES":
       return { ...state, notes: action.notes, loading: false };
+    case "ADD_NOTE":
+      return { ...state, notes: [action.note, ...state.notes], loading: false };
+    case "RESET_FORM":
+      return { ...state, form: initialState.form };
+    case "SET_INPUT":
+      return { ...state, form: { ...state.form, [action.name]: action.value } };
     case "ERROR":
       return { ...state, loading: false, error: true };
     default:
@@ -35,7 +45,7 @@ function App() {
   async function fetchNotes() {
     try {
       const notesData = await API.graphql({
-        query: listNotes,
+        query: listNotesQuery,
       });
       dispatch({ type: "SET_NOTES", notes: notesData.data.listNotes.items });
     } catch (e) {
@@ -44,11 +54,41 @@ function App() {
     }
   }
 
+  async function createNote() {
+    const { form } = state;
+    if (!form.name || !form.description) {
+      return alert("Please enter a name and description for the note");
+    }
+    const input = {
+      ...form,
+      clientId: CLIENT_ID,
+      completed: false,
+      id: uuid(),
+    };
+    dispatch({ type: "ADD_NOTE", note: input });
+    dispatch({ type: "RESET_FORM" });
+    try {
+      const response = await API.graphql({
+        query: createNoteMutation,
+        variables: { input },
+      });
+      console.log(response);
+      console.log("Successfully created note!");
+    } catch (e) {
+      console.log(e.message || e.stack || e);
+    }
+  }
+
+  function onChange(e) {
+    dispatch({ type: "SET_INPUT", name: e.target.name, value: e.target.value });
+  }
+
   useEffect(() => {
     fetchNotes();
   }, []);
 
   function renderItem(item) {
+    console.log({ item });
     return (
       <List.Item style={styles.item}>
         <List.Item.Meta title={item.name} description={item.description} />
@@ -58,6 +98,24 @@ function App() {
 
   return (
     <div style={styles.container}>
+      <Input
+        onChange={onChange}
+        value={state.form.name}
+        placeholder="Note Name"
+        name="name"
+        style={styles.input}
+      />
+      <Input
+        onChange={onChange}
+        value={state.form.description}
+        placeholder="Note Description"
+        name="description"
+        style={styles.input}
+      />
+      <Button onClick={createNote} type="primary">
+        Create Note
+      </Button>
+
       <List
         loading={state.loading}
         dataSource={state.notes}
