@@ -198,3 +198,10 @@ Take note of the prompts
 ### Deploy the API
 
 - `amplify push`
+
+## Create a React Client
+
+- Add Amplify config to the index.js
+- Create state data, and use `Amplify.API` to `get` the coin data
+- Update the state and call the function in `useEffect`
+- Iterate over the coin data and display
