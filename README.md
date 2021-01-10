@@ -356,3 +356,36 @@ Input Variables:
 #### Updating Notes
 
 #### Subscriptions
+
+# Basic Authentication Example App
+
+## App Setup
+
+```bash
+npx create-react-app basic-authentication && cd basic-authentication
+npm i aws-amplify @aws-amplify/ui-react antd react-router-dom -S
+amplify init
+```
+
+### Add Auth Service
+
+```bash
+amplify add auth
+# Select default options
+amplify push
+```
+
+## Creating the Directory Structure
+
+Create the following files:
+
+```
+./src
+  ├── Container.js
+  ├── Nav.js
+  ├── Profile.js
+  ├── Protected.js
+  ├── Public.js
+  ├── Router.js
+```
+
