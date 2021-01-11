@@ -400,3 +400,5 @@ Create the following files:
 ### Router Component
 
 ### Profile Component
+
+### Protected Route Hook
