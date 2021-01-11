@@ -389,3 +389,14 @@ Create the following files:
   ├── Router.js
 ```
 
+### Container Component
+
+### Public Component
+
+### Nav Component
+
+### Protected Component
+
+### Router Component
+
+### Profile Component

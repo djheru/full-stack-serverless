@@ -4,5 +4,12 @@
       "path": "."
     }
   ],
-  "settings": {}
+  "settings": {
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "[typescript]": {
+      "editor.formatOnPaste": true,
+      "editor.formatOnSave": true
+    }
+  }
 }
