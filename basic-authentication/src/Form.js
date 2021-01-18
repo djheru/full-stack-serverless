@@ -53,7 +53,98 @@ function Form(props) {
   const [formType, updateFormType] = useState('signIn');
   const [formState, updateFormState] = useState(initialFormState);
 
-  function renderForm() {}
+  function updateForm(event) {
+    const newFormState = {
+      ...formState,
+      [event.target.name]: event.target.value
+    };
+    updateFormState(newFormState);
+  }
+
+  async function signIn({ username, password }, setUser) {
+    try {
+      const user = await Auth.signIn(username, password);
+      const userInfo = { username: user.username, ...user.attributes };
+      console.log('signIn success');
+      setUser(userInfo);
+    } catch (e) {
+      console.log('signIn error');
+    }
+  }
+
+  async function signUp({ username, password, email }, updateFormType) {
+    try {
+      await Auth.signUp({ username, password, attributes: { email } });
+      console.log('signUp success');
+      updateFormType('confirmSignup');
+    } catch (e) { 
+      console.log('signUp error', e)
+    }
+  }
+  async function confirmSignUp({ username, confirmationCode }, updateFormType) {
+    try {
+      await Auth.confirmSignUp(username, confirmationCode);
+      console.log('confirmSignUp success');
+      updateFormType('signIn');
+    } catch (e) { 
+      console.log('confirmSignup error', e)
+    }
+  }
+  async function forgotPassword({ username }, updateFormType) {
+    try {
+      await Auth.forgotPassword(username);
+      console.log('forgotPassword success');
+      updateFormType('forgotPasswordSubmit');
+    } catch (e) { 
+      console.log('forgotPassword error', e)
+    }
+  }
+  async function forgotPasswordSubmit({ username, password, confirmationCode }, updateFormType) {
+    try {
+      await Auth.forgotPasswordSubmit(username, confirmationCode, password);
+      console.log('forgotPasswordSubmit success');
+      updateFormType('signIn')
+    } catch (e) { 
+      console.log('forgotPasswordSubmit error', e)
+    }
+  }
+
+  function renderForm() {
+    switch (formType) {
+      case 'signup':
+        return (
+          <SignUp
+            signUp={() => signUp(formState, updateFormType)}
+            updateFormState={e => updateForm(e)} />
+        );
+      case 'confirmSignup':
+        return (
+          <ConfirmSignup
+            confirmSignUp={() => confirmSignUp(formState, updateFormType)}
+            updateFormState={e => updateForm(e)} />
+        );
+      case 'signIn':
+        return (
+          <SignIn 
+            signIn={() => signIn(formState, props.setUser)}
+            updateFormState={e => updateForm(e)} />
+        );
+      case 'forgotPassword':
+        return (
+          <ForgotPassword
+            forgotPassword={() => forgotPassword(formState, updateFormType)}
+            updateFormState={e => updateForm(e)} />
+        );
+      case 'forgotPasswordSubmit':
+        return (
+          <ForgotPasswordSubmit
+            forgotPasswordSubmit={() => forgotPasswordSubmit(formState, updateFormType)}
+            updateFormState={e => updateForm(e)} />
+        );
+      default:
+        return null;
+    }
+  }
 
   return (<div>{renderForm()}</div>)
 }
