@@ -1,12 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { Auth } from 'aws-amplify';
-import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react';
+import { Button } from 'antd';
+import { Auth, Hub } from 'aws-amplify';
 import Container from './Container';
+import Form from './Form';
 
 const Profile = () => {
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(null);
+
   useEffect(() => {
     checkUser();
+    Hub.listen('auth', data => {
+      console.log('Hub auth data: ', data);
+      const { payload } = data;
+      if (payload.event === 'signOut') {
+        setUser(null)
+      }
+    });
   }, []);
 
   const checkUser = async () => {
@@ -17,17 +26,26 @@ const Profile = () => {
     } catch (e) {
       console.log('error: ', e);
     }
-  }  
+  }
 
-  return (
+  const signOut = async () => {
+    try {
+      await Auth.signOut();
+    } catch (e) {
+      console.log('signOut error: ', e)
+    }
+  }
+
+  return user ? (
     <Container>
       <h1>Profile</h1>
       <h2>Username: { user.username }</h2>
       <h3>Email: { user.email }</h3>
-      <h4>Phone: { user.phone_number }</h4>
-      <AmplifySignOut />
+      <Button onClick={signOut} >Sign Out</Button>
     </Container>
+  ) : (
+    <Form setUser={setUser} />
   )
 }
 
-export default withAuthenticator(Profile)
+export default Profile;

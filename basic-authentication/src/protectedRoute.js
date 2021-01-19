@@ -7,7 +7,9 @@ const protectedRoute = (Comp, route = '/profile') => props => {
     try {
       await Auth.currentAuthenticatedUser()
     } catch(e) {
-      attachEventProps.history.push(route)
+      if (attachEventProps && attachEventProps.history) {
+        attachEventProps.history.push(route)
+      }
     }
   }
 

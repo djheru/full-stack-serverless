@@ -18,6 +18,6 @@ const styles = {
 }
 export default function Button({ onClick, title }) {
   return (
-    <button style={styles.button} onClick={onclick}>{title}</button>
+    <button style={styles.button} onClick={onClick}>{title}</button>
   )
 }

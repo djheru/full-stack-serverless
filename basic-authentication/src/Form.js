@@ -63,6 +63,7 @@ function Form(props) {
 
   async function signIn({ username, password }, setUser) {
     try {
+      console.log('signIn');
       const user = await Auth.signIn(username, password);
       const userInfo = { username: user.username, ...user.attributes };
       console.log('signIn success');
@@ -111,7 +112,7 @@ function Form(props) {
 
   function renderForm() {
     switch (formType) {
-      case 'signup':
+      case 'signUp':
         return (
           <SignUp
             signUp={() => signUp(formState, updateFormType)}
@@ -146,7 +147,31 @@ function Form(props) {
     }
   }
 
-  return (<div>{renderForm()}</div>)
+  return (<div>
+    {renderForm()}
+    {
+      formType === 'signUp' && (<p style={styles.toggleForm}>
+        Already have an account? <span style={styles.anchor} onClick={() => updateFormType('signIn')}>Sign In</span>
+      </p>)
+    }
+    {
+      formType === 'signIn' && (
+        <>
+        <p style={styles.toggleForm}>
+          Need an account? <span style={styles.anchor} onClick={() => updateFormType('signUp')}>Sign Up</span>
+        </p>
+        <p style={styles.toggleForm}>
+          Forgot your Password? <span style={styles.anchor} onClick={() => updateFormType('forgotPassword')}>Reset Password</span>
+        </p>
+        </>
+      )
+    }
+    {
+      formType === 'forgotPassword' && (<p style={styles.toggleForm}>
+        Already reset your password? <span style={styles.anchor} onClick={() => updateFormType('forgotPasswordSubmit')}>Enter Verification Code</span>
+      </p>)
+    }
+  </div>)
 }
 
 export { styles, Form as default };
